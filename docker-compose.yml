@@ -1,0 +1,24 @@
+services:
+  reservation-backend:
+    build:
+      context: ./apirestintegridadReferencialMysql
+    container_name: reservation-backend
+    ports:
+      - "8895:8895"
+    networks:
+      - app-network
+
+
+  reservation-frontend:
+    build:
+      context: ./HotelAngular
+    container_name: reservation-frontend
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge

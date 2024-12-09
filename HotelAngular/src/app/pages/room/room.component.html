@@ -1,0 +1,96 @@
+<app-navigation></app-navigation>
+
+
+<main>
+    <h1>Habitaciones</h1>
+    <section>
+        <h2>Listado de habitaciones</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Camas</th>
+                    <th>Medidas</th>
+                    <th>Piso</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let room of rooms">
+                    <td>{{ room.id }}</td>
+                    <td>{{ room.name }}</td>
+                    <td>{{ room.bedCount }}</td>
+                    <td>{{ room.size }} m²</td>
+                    <td>{{ room.floorNumber }}</td>
+                    <td>{{ room.type }}</td>
+                    <td class="button-table">
+                        <button (click)="editRoom(room.id!)">Editar</button>
+                        <button (click)="deleteRoom(room.id!)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Botón para mostrar el formulario de agregar -->
+    <button class="button-form" (click)="toggleForm()">
+        <span *ngIf="!showForm">+</span> {{ showForm ? 'Ocultar Formulario' : 'Agregar Huésped' }}
+    </button>
+
+    <section *ngIf="showForm">
+        <h2>{{ selectedRoomId ? 'Editar' : 'Agregar' }} habitación</h2>
+
+        <form [formGroup]="roomForm" (ngSubmit)="onSubmit()">
+            <!-- Campos del formulario -->
+
+            <!-- Nombre -->
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" formControlName="name" name="name" required />
+            <div *ngIf="roomForm.get('name')?.invalid && roomForm.get('name')?.touched" class="error-message">
+                El nombre es obligatorio.
+            </div>
+
+            <!-- Camas -->
+            <label for="bedCount">Camas:</label>
+            <input type="number" id="bedCount" formControlName="bedCount" name="bedCount" required />
+            <div *ngIf="roomForm.get('bedCount')?.invalid && roomForm.get('bedCount')?.touched" class="error-message">
+                El número de camas es obligatorio.
+            </div>
+
+            <!-- Medidas -->
+            <label for="size">Medidas:</label>
+            <input type="text" id="size" name="size" formControlName="size" required />
+            <div *ngIf="roomForm.get('size')?.invalid && roomForm.get('size')?.touched" class="error-message">
+                Las medidas son obligatorias.
+            </div>
+
+            <!-- Piso -->
+            <label for="floorNumber">Piso:</label>
+            <input type="number" id="floorNumber" formControlName="floorNumber" name="floorNumber" required />
+            <div *ngIf="roomForm.get('floorNumber')?.invalid && roomForm.get('floorNumber')?.touched"
+                class="error-message">
+                El número del piso es obligatorio.
+            </div>
+
+            <!-- Tipo -->
+            <label for="type">Tipo:</label>
+            <input type="text" id="type" formControlName="type" name="type" required />
+            <div *ngIf="roomForm.get('type')?.invalid && roomForm.get('type')?.touched" class="error-message">
+                El tipo es obligatorio.
+            </div>
+
+            <!-- Botones -->
+            <div class="buttons m-5">
+                <button class="button-form" (click)="editCancel()" *ngIf="selectedRoomId"
+                    type="button">Cancelar</button>
+                <button class="button-form" type="submit" [disabled]="!roomForm.valid">
+                    {{ selectedRoomId ? 'Actualizar' : 'Agregar' }}
+                </button>
+            </div>
+        </form>
+    </section>
+
+
+</main>

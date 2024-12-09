@@ -1,0 +1,109 @@
+<app-navigation></app-navigation>
+
+<main>
+    <h1>Reservas</h1>
+
+    <!-- Listado de reservas -->
+    <section>
+        <h2>Listado de reservas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Huésped</th>
+                    <th>Habitación</th>
+                    <th>Costo</th>
+                    <th>Método de pago</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let reservation of reservations">
+                    <td>{{ reservation.id }}</td>
+                    <td>{{ reservation.guest.firstName }}</td>
+                    <td>{{ reservation.room.name }}</td>
+                    <td>$ {{ reservation.cost }}</td>
+                    <td>{{ reservation.paymentMethod }}</td>
+                    <td>{{ reservation.checkInDate }}</td>
+                    <td>{{ reservation.checkOutDate }}</td>
+                    <td class="button-table">
+                        <button (click)="editReservation(reservation.id!)">Editar</button>
+                        <button (click)="deleteReservation(reservation.id!)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Botón para mostrar el formulario de agregar -->
+    <button class="button-form" (click)="toggleForm()">
+        <span *ngIf="!showForm">+</span> {{ showForm ? 'Ocultar Formulario' : 'Agregar Reserva' }}
+    </button>
+
+    <!-- Formulario de reservas -->
+    <section *ngIf="showForm">
+        <h2>{{ selectedReservationId ? 'Editar' : 'Agregar' }} reservación</h2>
+
+        <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+
+            <!-- ID del huésped -->
+            <label for="guestId">ID del Huésped:</label>
+            <input type="number" id="guestId" formControlName="guestId" name="guestId" required />
+            <div *ngIf="reservationForm.get('guestId')?.invalid && reservationForm.get('guestId')?.touched"
+                class="error-message">
+                El ID del huésped es obligatorio.
+            </div>
+
+            <!-- ID de la habitación -->
+            <label for="roomId">ID de la habitación:</label>
+            <input type="number" id="roomId" formControlName="roomId" name="roomId" required />
+            <div *ngIf="reservationForm.get('roomId')?.invalid && reservationForm.get('roomId')?.touched"
+                class="error-message">
+                El ID de la habitación es obligatorio.
+            </div>
+
+            <!-- Costo -->
+            <label for="cost">Costo:</label>
+            <input type="number" id="cost" formControlName="cost" name="cost" required />
+            <div *ngIf="reservationForm.get('cost')?.invalid && reservationForm.get('cost')?.touched"
+                class="error-message">
+                El costo es obligatorio.
+            </div>
+
+            <!-- Métodos de pago -->
+            <label for="paymentMethod">Métodos de pago:</label>
+            <input type="text" id="paymentMethod" formControlName="paymentMethod" name="paymentMethod" required />
+            <div *ngIf="reservationForm.get('paymentMethod')?.invalid && reservationForm.get('paymentMethod')?.touched"
+                class="error-message">
+                El método de pago es obligatorio.
+            </div>
+
+            <!-- Fecha de entrada -->
+            <label for="checkIn">Entrada:</label>
+            <input type="date" id="checkIn" formControlName="checkInDate" name="checkIn" required />
+            <div *ngIf="reservationForm.get('checkInDate')?.invalid && reservationForm.get('checkInDate')?.touched"
+                class="error-message">
+                La fecha de entrada es obligatoria.
+            </div>
+
+            <!-- Fecha de salida -->
+            <label for="checkOutDate">Salida:</label>
+            <input type="date" id="checkOutDate" formControlName="checkOutDate" name="checkOutDate" required />
+            <div *ngIf="reservationForm.get('checkOutDate')?.invalid && reservationForm.get('checkOutDate')?.touched"
+                class="error-message">
+                La fecha de salida es obligatoria.
+            </div>
+
+            <!-- Botones -->
+            <div class="buttons m-5">
+                <button class="button-form" (click)="editCancel()" *ngIf="selectedReservationId"
+                    type="button">Cancelar</button>
+                <button class="button-form" type="submit" [disabled]="!reservationForm.valid">
+                    {{ selectedReservationId ? 'Actualizar' : 'Agregar' }}
+                </button>
+            </div>
+        </form>
+    </section>
+</main>
